@@ -29,18 +29,45 @@ func startBot1(dep *bootstrap.Dependency) *cobra.Command {
 				bot.WithDefaultHandler(handler),
 			}
 
-			bot, err := bot.New("5126877034:AAFkUGUuS6d-z6TDLe6NIWgLcUUGi73U3to", opts...)
+			b, err := bot.New("5126877034:AAFkUGUuS6d-z6TDLe6NIWgLcUUGi73U3to", opts...)
 			if err != nil {
 				log.Error(err)
 				return
 			}
+			b.RegisterHandler(bot.HandlerTypeMessageText, "/start", bot.MatchTypeExact, myStartHandler)
 
-			bot.Start(ctx)
+			log.Info("Bot started")
+
+			for {
+
+				if ctx.Err() != nil {
+					log.Info("Bot stopped")
+					return
+				}
+				b.SendMessage(ctx, &bot.SendMessageParams{
+					ChatID: 608578144,
+					Text:   "HALO GUH",
+				})
+			}
+
+			b.Start(ctx)
 		},
 	}
 }
 
+func myStartHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
+	log.Info("isi nya ", update.Message.Chat.ID)
+	b.SendMessage(ctx, &bot.SendMessageParams{
+		ChatID: update.Message.Chat.ID,
+		Text:   "Hello, World!",
+	})
+}
+
 func handler(ctx context.Context, b *bot.Bot, update *models.Update) {
+
+	b.DeleteMessage(ctx, &bot.DeleteMessageParams{
+		ChatID: update.Message.Chat.ID,
+	})
 
 	b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID: update.Message.Chat.ID,
