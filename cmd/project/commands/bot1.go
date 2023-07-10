@@ -2,6 +2,7 @@ package commands
 
 import (
 	"context"
+	"encoding/json"
 	"os"
 	"os/signal"
 
@@ -29,7 +30,8 @@ func startBot1(dep *bootstrap.Dependency) *cobra.Command {
 				bot.WithDefaultHandler(handler),
 			}
 
-			b, err := bot.New("5126877034:AAFkUGUuS6d-z6TDLe6NIWgLcUUGi73U3to", opts...)
+			b, err := bot.New("6300175469:AAHly94Qz_4pdZIZ3_x06Y1GXt7g-g-_6Ug", opts...)
+			// b, err := bot.New("5126877034:AAFkUGUuS6d-z6TDLe6NIWgLcUUGi73U3to", opts...)
 			if err != nil {
 				log.Error(err)
 				return
@@ -53,19 +55,47 @@ func myStartHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 
 func handler(ctx context.Context, b *bot.Bot, update *models.Update) {
 
-	// update.Message.Chat.ID
-	// log.Info("ini apa ya ", update.ChatMember.NewChatMember.Member.User.ID)
+	shal, err := json.Marshal(update)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	log.Info(string(shal))
 
-	// _, err := b.DeleteMessage(ctx, &bot.DeleteMessageParams{
-	// 	ChatID:    update.Message.Chat.ID,
-	// 	MessageID: update.Message.ID,
-	// })
-	// if err != nil {
-	// 	log.Error(err)
+	// log.Info("isi nya ", update.ChannelPost.Text)
+
+	// b.ForwardMessage(ctx, &bot.ForwardMessageParams{})
+
+	// if update.ChannelPost.Text == "fwd" {
+	// 	b.ForwardMessage(ctx, &bot.ForwardMessageParams{
+	// 		ChatID:     1288114342,
+	// 		FromChatID: "-838472573",
+	// 		MessageID:  275,
+	// 	})
+
 	// }
-	b.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID:    update.Message.Chat.ID,
-		Text:      "<h1>raga</h1>",
-		ParseMode: models.ParseModeHTML,
-	})
+
+	// // photo :=
+	if update.ChannelPost.Text == "del" {
+		_, errs := b.SendPhoto(ctx, &bot.SendPhotoParams{
+			ChatID: 1288114342,
+			//from chat id
+
+			Photo:   &models.InputFileString{Data: "AgACAgUAAx0CdZ6c1wADDmSsPTGkEzE1Yu7yHmBOp9gKP7N5AAJ6ujEbQ5tgVfQNZLYVNhDoAQADAgADcwADLwQ"},
+			Caption: "test",
+		})
+		if errs != nil {
+			log.Error(errs)
+		}
+	}
+	//we can do whatever we want with the update here
+
+	// if update.Message.Text == "kon" {
+	// 	b.SendMessage(ctx, &bot.SendMessageParams{
+	// 		ChatID:    update.Message.Chat.ID,
+	// 		Text:      "tol",
+	// 		ParseMode: models.ParseModeHTML,
+	// 	})
+	// }
+
 }
