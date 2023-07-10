@@ -1,0 +1,6 @@
+enc_key: "3423owijroiw390r"
+env: development
+host: 
+  address: ":8081"
+database:
+  write: "postgres://root:root@localhost:5432/project"
