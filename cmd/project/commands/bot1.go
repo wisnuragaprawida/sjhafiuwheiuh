@@ -38,18 +38,6 @@ func startBot1(dep *bootstrap.Dependency) *cobra.Command {
 
 			log.Info("Bot started")
 
-			for {
-
-				if ctx.Err() != nil {
-					log.Info("Bot stopped")
-					return
-				}
-				b.SendMessage(ctx, &bot.SendMessageParams{
-					ChatID: 608578144,
-					Text:   "HALO GUH",
-				})
-			}
-
 			b.Start(ctx)
 		},
 	}
@@ -65,12 +53,19 @@ func myStartHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 
 func handler(ctx context.Context, b *bot.Bot, update *models.Update) {
 
-	b.DeleteMessage(ctx, &bot.DeleteMessageParams{
-		ChatID: update.Message.Chat.ID,
-	})
+	// update.Message.Chat.ID
+	// log.Info("ini apa ya ", update.ChatMember.NewChatMember.Member.User.ID)
 
+	// _, err := b.DeleteMessage(ctx, &bot.DeleteMessageParams{
+	// 	ChatID:    update.Message.Chat.ID,
+	// 	MessageID: update.Message.ID,
+	// })
+	// if err != nil {
+	// 	log.Error(err)
+	// }
 	b.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID: update.Message.Chat.ID,
-		Text:   update.Message.Text,
+		ChatID:    update.Message.Chat.ID,
+		Text:      "<h1>raga</h1>",
+		ParseMode: models.ParseModeHTML,
 	})
 }
